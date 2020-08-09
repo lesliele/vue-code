@@ -1,0 +1,41 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe D:\yarn\bin\yarn.js add rollup @rollup/plugin-babel @bable/core @babel/preset-env rollup-plugin-serve -D
+
+PATH: 
+  C:\Program Files\Common Files\Microsoft Shared\Windows Live;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\TortoiseSVN\bin;C:\Program Files\nodejs\;D:\yarn\bin\;C:\Program Files\Common Files\Microsoft Shared\Windows Live;D:\Microsoft VS Code\bin;C:\Users\Administrator.SC-201811171547\AppData\Roaming\npm;C:\Users\Administrator.SC-201811171547\AppData\Local\Yarn\bin
+
+Yarn version: 
+  1.22.4
+
+Node version: 
+  12.13.0
+
+Platform: 
+  win32 x64
+
+Trace: 
+  Error: https://registry.yarnpkg.com/@bable%2fcore: Not found
+      at Request.params.callback [as _callback] (D:\yarn\lib\cli.js:66096:18)
+      at Request.self.callback (D:\yarn\lib\cli.js:140748:22)
+      at Request.emit (events.js:210:5)
+      at Request.<anonymous> (D:\yarn\lib\cli.js:141720:10)
+      at Request.emit (events.js:210:5)
+      at IncomingMessage.<anonymous> (D:\yarn\lib\cli.js:141642:12)
+      at Object.onceWrapper (events.js:299:28)
+      at IncomingMessage.emit (events.js:215:7)
+      at endReadableNT (_stream_readable.js:1183:12)
+      at processTicksAndRejections (internal/process/task_queues.js:80:21)
+
+npm manifest: 
+  {
+    "name": "vue-code",
+    "version": "1.0.0",
+    "main": "index.js",
+    "license": "MIT"
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

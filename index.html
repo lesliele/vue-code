@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app" style="color: red;">
+        66
+        <span>1312 {{name}}</span>
+        <p>{{school.name}}</p>
+    </div>
+    <script src="./dist/umd/vue.js"></script>
+    <script>
+        const vm = new Vue({
+            el: '#app',
+            data () {
+                return {
+                    a: [1, 2, 3],
+                    b: '',
+                    name: 'canvas',
+                    school: {
+                        name: 'sss'
+                    }
+                }
+            }
+        })
+        // vm._data.a[0] = 55
+        // 开发时很少对数组索引进行操作，为了性能考虑不对数组进行拦截
+        // 拦截数组方法
+        vm.b = 123;
+    </script>
+</body>
+</html>
