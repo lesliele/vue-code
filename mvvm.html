@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <h1 class='box'>{{name}}哈哈哈哈{{age}}</h1>
+        <input type="text" v-model='name'>
+
+        <h2>{{age}}</h2>
+        <input type="text" v-model='age'>
+    </div>
+</body>
+</html>
+<script>
+
+  function observe(data){
+    // 把data中的属性进行劫持
+    if(({}).toString.call(data).match(/ (\w+)]/)[1] != 'Object')return ;
+    let keys = Object.keys(data);// 获取到了每一个属性名
+    keys.forEach(key=>{
+      defineReactive(data,key,data[key])
+    })
+  }
+  function defineReactive(obj,key,value){
+    // 负责使用 defineProperty进行数据劫持
+    observe(value);// 递归劫持
+    let dep = new Dep();
+    Object.defineProperty(obj,key,{
+      get(){
+        if(Dep.target){
+          dep.addSub(Dep.target)
+        }
+        
+        return value
+      },
+      set(newVal){
+        if(value !== newVal){
+          value = newVal
+          dep.notify()
+        }
+        
+      }
+    })
+  }
+  
+
+  function nodeToFragment(el,vm){
+    // 把节点转到 fragment上
+    let fragment = document.createDocumentFragment();
+    let child;
+    while(child = el.firstChild){
+      fragment.appendChild(child)
+      compile(child,vm)
+    }
+    el.appendChild(fragment)
+  }
+  function compile(node,vm){
+    // 编译 node中的  vue语法
+    // 先判断 node的节点类型 看他是一个 元素节点 还是 文本节点
+    if(node.nodeType == 1){
+      // 元素节点 // 要获取行内属性的
+      let attrs = node.attributes;
+      [...attrs].forEach(item=>{
+        // 查看当前的属性名是不是  v-xxx的
+        if(/^v-/.test(item.name)){
+          // 证明这个属性 是 v-model 我i们要获取 后边的name这个字符
+          let vName = item.nodeValue; // name
+          let val = vm.$data[vName];// 珠峰
+          new Watcher(node,vName,vm)
+          node.value = val;// 把珠峰这两字 放到 input框中
+          node.addEventListener('input',(e)=>{
+            vm.$data[vName] = e.target.value
+          })
+        }
+      });
+      
+      // 处理当前元素的子元素
+      [...node.childNodes].forEach(item=>{
+        compile(item,vm)
+      })
+    }else{
+      // 文本节点 
+      let str = node.textContent;// 获取文本字符串
+      // console.log(str)//  {{name}}
+      if(/\{\{(\w+)\}\}/.test(str)){
+        str = str.replace(/\{\{(\w+)\}\}/g,(a,b)=>{
+          new Watcher(node,b,vm)
+          return vm.$data[b]
+        })
+        node.textContent = str
+      }
+    }
+  }
+  
+
+  //订阅器
+  class Dep{
+    constructor(){
+      this.subs = [];
+    }
+    addSub(sub){
+      this.subs.push(sub)
+    }
+    notify(){
+      this.subs.forEach(sub=>{
+        // debugger
+        // 让对应的事件执行  sub 就是哪些 watcher
+        sub.update()
+      })
+    }
+  }
+  // 订阅者
+  class Watcher{
+    constructor(node,key,vm){
+      Dep.target = this;
+      this.node = node;
+      this.key = key;
+      this.vm = vm;
+      this.getValue();
+      Dep.target = null;
+    }
+    update(){
+      this.getValue();
+      // debugger
+      if(this.node.nodeType == 1){
+        // 就是input框
+        this.node.value = this.value;
+      }else{
+        this.node.textContent = this.value;
+      }
+    }
+    getValue(){
+      // 获取新值
+      this.value = this.vm.$data[this.key]
+    }
+
+  }
+
+  
+  function Vue(options){
+    this.$el = document.querySelector(options.el)
+    this.$data = options.data;
+    observe(this.$data) // 负责数据劫持
+    nodeToFragment(this.$el,this) ;// 负责模板编译
+
+  }
+</script>
+<script>
+    let vm = new Vue({
+        el:'#app',
+        data:{
+            name:"珠峰",
+            age:100
+        }
+    });
+</script>
